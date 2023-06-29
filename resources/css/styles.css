@@ -1,7 +1,3 @@
-body {
-    background-color: #f8f9fa;
-}
-
 .card {
     margin-top: 50px;
     border-radius: 10px;
@@ -60,13 +56,14 @@ body {
 .popup-content {
     position: relative;
     top: 50%;
-    right: 0;
+    /*right: 100px;*/
     transform: translate(50%, -50%);
     background-color: #fff;
-    padding: 20px;
+    padding: 40px;
     border-radius: 5px;
-    width: 80%;
+    width: 50%;
     height: 100%;
+    overflow-y: auto;
 }
 
 .popup {
@@ -86,5 +83,119 @@ body {
 
 .badge {
     margin-right: 5px;
+}
+
+.task_add__button {
+    margin-top: 20px;
+}
+
+.editor_content__wrapper {
+    margin-top: 20px;
+}
+
+.editor_content__title {
+    width: 80%;
+    font-size: 26px;
+}
+
+.editor_content__title button:focus {
+    outline: none;
+}
+
+.add_custom_tag__button {
+    margin-left: 10px;
+}
+
+.tag_name__input {
+    display: none;
+}
+
+.tag_name_input__content {
+    display: none;
+    margin-top: 10px;
+}
+
+.task_image__add {
+    margin-bottom: 25px;
+    width: 70%;
+}
+
+.task_description__text {
+    margin-top: 20px;
+}
+
+.task_image__wrapper {
+    border-top: grey solid 1px;
+    margin-top: 5%;
+    padding-top: 20px;
+}
+
+#preloader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+#loader {
+    border: 8px solid #f3f3f3; /* Цвет обводки */
+    border-top: 8px solid #3498db; /* Цвет активного состояния */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.select-wrapper {
+    position: relative;
+    display: flex;
+}
+
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select:focus {
+    outline: none;
+    border-color: #5b9dd9;
+}
+
+.custom-select option {
+    padding: 10px;
+}
+
+.custom-select::after {
+    content: '\f107';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-family: FontAwesome;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+/* Additional styling for the arrow icon */
+.custom-select:focus::after {
+    color: #5b9dd9;
 }
 
