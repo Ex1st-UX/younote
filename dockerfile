@@ -10,12 +10,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libjpeg-dev \
     libfreetype6-dev \
+    && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 WORKDIR /var/www/html
 COPY . /var/www/html

@@ -104,9 +104,9 @@ class Component {
                 },
             },
             (response) => {
-                this.loadTaskList({processData: false, contentType: false});
                 this.getTemplate('task', JSON.stringify(response))
                     .then((node) => {
+                        this.loadTaskList({processData: false, contentType: false});
                         this.render(node, this.popupContentNode);
                         this.openEditor();
                     });
