@@ -81,9 +81,8 @@ class Component {
                 this.getTemplate('task', JSON.stringify(response))
                     .then((node) => {
                         this.render(node, this.popupContentNode);
+                        this.openEditor();
                     });
-                
-                this.openEditor();
             }
         );
     }
