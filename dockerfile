@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libjpeg62-turbo-dev \
-    libjpeg-dev \
     libfreetype6-dev \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
