@@ -1,5 +1,4 @@
 import $ from "jquery";
-import {orderBy} from "lodash/collection";
 
 class Component {
     constructor() {
@@ -173,12 +172,16 @@ class Component {
 
         let mergedParams = Object.assign({}, defaultParams, params);
 
+        this.addPreloader();
         return $.ajax({
             ...mergedParams,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: callback
+            success: (response) => {
+                this.removePreloader();
+                callback(response);
+            }
         });
     }
 
