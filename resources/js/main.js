@@ -149,7 +149,7 @@ class Component {
 
     async getTemplate(templateName, data = {}, contentType = 'application/json') {
         let node;
-
+        
         await this.sendRequest(
             'templates/render/' + templateName,
             data,
@@ -175,7 +175,7 @@ class Component {
         let mergedParams = Object.assign({}, defaultParams, params);
 
         this.addPreloader();
-        $.ajax({
+        return $.ajax({
             ...mergedParams,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
