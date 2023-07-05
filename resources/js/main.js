@@ -150,6 +150,7 @@ class Component {
     async getTemplate(templateName, data = {}, contentType = 'application/json') {
         let node;
 
+        this.addPreloader();
         await this.sendRequest(
             'templates/render/' + templateName,
             data,
@@ -159,6 +160,7 @@ class Component {
             },
             (response) => {
                 node = response;
+                this.removePreloader();
             }
         );
 
@@ -174,16 +176,12 @@ class Component {
 
         let mergedParams = Object.assign({}, defaultParams, params);
 
-        this.addPreloader();
         return $.ajax({
             ...mergedParams,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: (response) => {
-                callback(response);
-                this.removePreloader();
-            }
+            success: callback
         });
     }
 
