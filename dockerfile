@@ -1,7 +1,6 @@
-# Указываем базовый образ
-FROM php:8.0-fpm
+#System
+FROM php:8.0-apache
 
-# Установка необходимых зависимостей
 RUN apt-get update && apt-get install -y \
     curl \
     libpng-dev \
@@ -11,34 +10,40 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Назначение рабочей директории и копирование файлов проекта
 WORKDIR /var/www/html
 COPY . /var/www/html
 
-# Установка зависимостей с помощью Composer
+#Laravel
 RUN composer install --no-interaction --no-dev --optimize-autoloader
+RUN chown -R www-data:www-data /var/www/html/*
 
-# Назначение прав доступа
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Создание символической ссылки на хранилище
 RUN php artisan storage:link
-
-# Генерация ключа приложения Laravel
 RUN php artisan key:generate
 
-# Копирование файла конфигурации NGINX в контейнер
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+#Npm
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y nodejs
 
-# Установка и настройка Nginx
-RUN apt-get update && apt-get install -y nginx
+RUN cd /var/www/html && \
+    npm install
+RUN npm run prod
 
-# Открытие портов 80 и 8080
-EXPOSE 80
-EXPOSE 8080
+#Apache
+RUN a2enmod rewrite
 
-RUN php artisan serve
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+RUN sed -i '/<Directory ${APACHE_DOCUMENT_ROOT}>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
+#Finish
+CMD ["apache2-foreground"]
+RUN docker run -d -p 80:80 yn
+RUN docker-compose up -d
+
 

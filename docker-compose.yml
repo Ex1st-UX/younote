@@ -6,6 +6,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/var/www/html
+      - ./storage:/var/www/html/storage
+    ports:
+      - "80:80"
     depends_on:
       - db
   db:
@@ -17,4 +20,7 @@ services:
       MYSQL_USER: laravel
       MYSQL_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
-  
+
+
+
+
