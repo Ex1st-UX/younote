@@ -175,7 +175,7 @@ class Component {
         let mergedParams = Object.assign({}, defaultParams, params);
 
         this.addPreloader();
-        return $.ajax({
+        $.ajax({
             ...mergedParams,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

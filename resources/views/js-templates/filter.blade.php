@@ -21,11 +21,11 @@
         </div>
     </div>
     <div class="form-group datepicker__input">
-        <label for="filter__start_date">Select start date:</label>
+        <label for="filter__start_date">Created after:</label>
         <input type="date" class="form-control" id="filter__start_date" name="filter__start_date" value="{{ isset($data['filter__start_date']) ? $data['filter__start_date'] : '' }}">
     </div>
     <div class="form-group datepicker__input">
-        <label for="datepicker">Select end date:</label>
+        <label for="datepicker">Created before:</label>
         <input type="date" class="form-control datepicker" id="filter__start_date" name="filter__end_date" value="{{ isset($data['filter__end_date']) ? $data['filter__end_date'] : '' }}">
     </div>
     <div class="form-group row">
