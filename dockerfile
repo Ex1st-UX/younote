@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     zip \
     unzip \
+    libjpeg62-turbo-dev \
     libjpeg-dev \
     libfreetype6-dev \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
