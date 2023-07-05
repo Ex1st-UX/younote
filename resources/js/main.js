@@ -22,7 +22,7 @@ class Component {
 
         $(document).on('click', '#popup_close__button', this.closeEditor.bind(this));
         $(document).on('click', '.add_custom_tag__button', this.addCustomTag.bind(this))
-        $(document).on('submit', this.createTaskFormId, this.addTaskSubmit.bind(this))
+        $(document).on('submit', this.createTaskFormId, this.createTaskSubmit.bind(this))
         $(document).on('submit', '#filter__form', this.onFilterSubmit.bind(this))
         $(document).on('click', '.list-group-item', this.selectTask.bind(this))
         $(document).on('change', '#sort__select', this.onSortChange.bind(this))
@@ -72,7 +72,6 @@ class Component {
             return;
         }
 
-        this.openEditor();
         this.sendRequest(
             '/tasks/get/id/' + taskId,
             {},
@@ -82,11 +81,13 @@ class Component {
                     .then((node) => {
                         this.render(node, this.popupContentNode);
                     });
+                
+                this.openEditor();
             }
         );
     }
 
-    addTaskSubmit(e) {
+    createTaskSubmit(e) {
         e.preventDefault();
         let form = document.querySelector(this.createTaskFormId);
         let formData = new FormData(form);
@@ -103,12 +104,13 @@ class Component {
                 },
             },
             (response) => {
-                this.loadTaskList({processData: false, contentType: false});
                 this.getTemplate('task', JSON.stringify(response))
                     .then((node) => {
                         this.render(node, this.popupContentNode);
                         this.openEditor();
                     });
+
+                this.loadTaskList({processData: false, contentType: false});
             }
         );
     }
@@ -179,8 +181,8 @@ class Component {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: (response) => {
-                this.removePreloader();
                 callback(response);
+                this.removePreloader();
             }
         });
     }
