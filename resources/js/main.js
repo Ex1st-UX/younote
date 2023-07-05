@@ -104,6 +104,7 @@ class Component {
                 },
             },
             (response) => {
+                this.loadTaskList({processData: false, contentType: false});
                 this.getTemplate('task', JSON.stringify(response))
                     .then((node) => {
                         this.render(node, this.popupContentNode);

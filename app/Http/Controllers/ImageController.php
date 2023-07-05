@@ -57,6 +57,7 @@ class ImageController extends Controller
 
     public static function handleImages($images): array
     {
+        $arPathes = [];
         foreach ($images as $item) {
             if (ImageController::isImageValid($item)) {
                 $path = $item->store('public/images');
