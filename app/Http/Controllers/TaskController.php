@@ -158,6 +158,13 @@ class TaskController extends Controller
 
     public static function getTags(): array
     {
-        return Tags::pluck('title')->unique()->toArray();
+        $tags = Tags::whereIn('task_id', function ($query) {
+            $query->select('id')
+                ->from('tasks')
+                ->where('user_id', Auth::id());
+        })->pluck('title')->unique()->toArray();
+
+        return $tags;
     }
+
 }
