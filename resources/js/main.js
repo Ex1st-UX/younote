@@ -150,7 +150,6 @@ class Component {
     async getTemplate(templateName, data = {}, contentType = 'application/json') {
         let node;
 
-        this.addPreloader();
         await this.sendRequest(
             'templates/render/' + templateName,
             data,
@@ -160,7 +159,6 @@ class Component {
             },
             (response) => {
                 node = response;
-                this.removePreloader();
             }
         );
 
