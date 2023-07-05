@@ -158,13 +158,6 @@ class TaskController extends Controller
 
     public static function getTags(): array
     {
-        $Tags = Tags::all();
-
-        $arData = [];
-        foreach ($Tags as $tag) {
-            $arData[] = $tag->title;
-        }
-
-        return $arData;
+        return Tags::pluck('title')->unique()->toArray();
     }
 }
