@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TaskController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +18,5 @@ Route::get('/', function () {
     return view('tasks');
 })->middleware(['auth'])->name('tasks');
 
-Route::post('/tasks/create', [TaskController::class, 'create']);
-Route::post('/tasks/get/list', [TaskController::class, 'getTaskList']);
-Route::post('/tasks/get/id/{id}', [TaskController::class, 'getTaskById']);
-
 require __DIR__.'/auth.php';
+require __DIR__.'/api.php';

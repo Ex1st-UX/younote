@@ -16,23 +16,12 @@
                     </div>
                     <button type="button" class="btn btn-success task_add__button">Add task</button>
                     <div class="select-wrapper">
-                        <div class="col">
-                            <select class="custom-select">
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                                <option value="option4">Option 4</option>
-                            </select>
-                        </div>
-                        <div class="col">
-                            <select class="custom-select">
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                                <option value="option4">Option 4</option>
-                            </select>
-                        </div>
+                        <select class="custom-select" name="sort" id="sort__select">
+                            <option value="title">Sort by name</option>
+                            <option value="created_at" selected>Sort by date</option>
+                        </select>
                     </div>
+                    <button type="button" class="btn btn-outline-dark task_filter__button">FILTER</button>
                     <div class="card-body task_content"></div>
                 </div>
             </div>
@@ -43,9 +32,5 @@
         <div class="popup-content container"></div>
     </div>
 </x-app-layout>
-
-<script>
-    let userId = {{ auth()->user()->id ?? 'null' }};
-</script>
 
 

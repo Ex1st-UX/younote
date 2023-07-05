@@ -8,10 +8,11 @@ use Intervention\Image\Facades\Image;
 //TODO: вынести в отдельный класс (не контроллер)
 class ImageController extends Controller
 {
+    const TASK_PREVIEW_SIZE = [150, 150];
     const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png'];
     const PREVIEW_DIR_PATH = 'public/previews/';
 
-    public static function isImageValid($image)
+    public static function isImageValid($image): bool
     {
         $imageExt = $image->getClientOriginalExtension();
         return in_array($imageExt, self::ALLOWED_EXTENSIONS);
@@ -52,5 +53,25 @@ class ImageController extends Controller
         $image->save($dirPath . $fileName, 80);
 
         return 'previews/' . $fileName;
+    }
+
+    public static function handleImages($images): array
+    {
+        foreach ($images as $item) {
+            if (ImageController::isImageValid($item)) {
+                $path = $item->store('public/images');
+                $previewPath = ImageController::getPreview($path, self::TASK_PREVIEW_SIZE);
+                $imageName = basename($path);
+
+                if ($path) {
+                    $arPathes[$imageName] = [
+                        'picture' => $imageName,
+                        'preview' => $previewPath
+                    ];
+                }
+            }
+        }
+
+        return $arPathes;
     }
 }

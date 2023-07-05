@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/tasks/create', [TaskController::class, 'create']);
+Route::post('/tasks/get/list/sort/{orderBy}', [TaskController::class, 'getTaskList']);
+Route::post('/tasks/get/id/{id}', [TaskController::class, 'getTaskById']);
+
+Route::post('/templates/render/{templateName}', function (Request $request, $templateName) {
+    $renderedView = View::make('js-templates.' . $templateName, ['data' => $request->input()])->render();
+    return response()->json($renderedView);
 });

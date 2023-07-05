@@ -94,7 +94,6 @@
 }
 
 .editor_content__title {
-    width: 80%;
     font-size: 26px;
 }
 
@@ -166,7 +165,7 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    height: 100%;
+    height: 50px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -174,25 +173,14 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.custom-select:focus {
-    outline: none;
-    border-color: #5b9dd9;
+.form-group label {
+    vertical-align: middle;
 }
 
-.custom-select option {
-    padding: 10px;
+.datepicker__input {
+    width: 83%;
 }
 
-.custom-select::after {
-    content: '\f107';
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    font-family: FontAwesome;
-    font-size: 12px;
-    pointer-events: none;
-}
 
 /* Additional styling for the arrow icon */
 .custom-select:focus::after {

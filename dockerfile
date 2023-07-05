@@ -12,17 +12,33 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Установка Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Установка рабочей директории и копирование файлов проекта
+# Назначение рабочей директории и копирование файлов проекта
 WORKDIR /var/www/html
 COPY . /var/www/html
+
+# Установка зависимостей с помощью Composer
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Назначение прав доступа
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Установка MySQL-клиента
-RUN apt-get install -y default-mysql-client
+# Создание символической ссылки на хранилище
+RUN php artisan storage:link
 
-# Запуск сервера PHP
-CMD php artisan serve --host=0.0.0.0 --port=8000
+# Генерация ключа приложения Laravel
+RUN php artisan key:generate
+
+# Копирование файла конфигурации NGINX в контейнер
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Установка и настройка Nginx
+RUN apt-get update && apt-get install -y nginx
+
+# Открытие портов 80 и 8080
+EXPOSE 80
+EXPOSE 8080
+
+RUN php artisan serve
+

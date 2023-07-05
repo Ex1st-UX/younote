@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\URL;
 
 class TaskController extends Controller
 {
-    const TASK_PREVIEW_SIZE = [150, 150];
-
     public function create(Request $request): \Illuminate\Http\JsonResponse
     {
         $img = $request->file('image_task__input');
@@ -25,12 +23,12 @@ class TaskController extends Controller
             'title' => $request->input('title_task__input'),
             'text' => $request->input('text_task__input'),
             'tags_list' => $request->input('tag_task__input'),
-            'img' => ($img) ? $this->handleImages($img) : ''
+            'img' => ($img) ? ImageController::handleImages($img) : ''
         ];
         $taskId = $this->save($data);
 
         $taskResponseData = $this->getTaskById($taskId, false);
-        return response()->json(['success' => boolval($taskId), 'data' => $taskResponseData]);
+        return response()->json($taskResponseData);
     }
 
     protected function save(array $data): mixed
@@ -64,16 +62,40 @@ class TaskController extends Controller
 
         if ($res) {
             return $Task->id;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public function getTaskList(): \Illuminate\Http\JsonResponse
+    public function getTaskList(Request $request, $orderBy): \Illuminate\Http\JsonResponse
     {
         $userId = Auth::id();
-        $tasks = Task::where('user_id', $userId)->orderBy('updated_at', 'desc')->get();
+        $input = $request->input();
+
+        if ($input) {
+            $tasks = Task::query();
+
+            if ($input['search_q']) {
+                $tasks->where('title', 'like', '%' . $input['search_q'] . '%');
+            }
+            if ($input['filter__start_date']) {
+                $tasks->where('created_at', '>=', $input['filter__start_date']);
+            }
+            if ($input['filter__end_date']) {
+                $tasks->where('created_at', '<=', $input['filter__end_date']);
+            }
+            if ($input['filter__tags']) {
+                $tasks->whereHas('tags', function ($query) use ($input) {
+                    $query->whereIn('title', [$input['filter__tags']]);
+                });
+            }
+
+            $tasks = $tasks->orderBy($orderBy, 'desc')->get();
+        } else {
+            $tasks = Task::where('user_id', $userId)
+                ->orderBy($orderBy, 'desc')
+                ->get();
+        }
 
         $arResponse = [];
         foreach ($tasks as $task) {
@@ -92,10 +114,8 @@ class TaskController extends Controller
             ];
         }
 
-        return response()->json($arResponse);
+        return response()->json(['items' => $arResponse]);
     }
-
-    public function
 
     /**
      * @param int $taskId
@@ -108,7 +128,7 @@ class TaskController extends Controller
 
         foreach ($Task->images as $image) {
             $pathImage = $image->path;
-            $previewImage = ImageController::getPreview($pathImage, self::TASK_PREVIEW_SIZE);
+            $previewImage = ImageController::getPreview($pathImage, ImageController::TASK_PREVIEW_SIZE);
 
             $arImages[] = [
                 'picture' => Storage::url('images/' . $pathImage),
@@ -131,29 +151,18 @@ class TaskController extends Controller
 
         if ($respJson) {
             return response()->json($data);
-        }
-        else {
+        } else {
             return $data;
         }
     }
 
-    protected function handleImages($images): array
+    public static function getTags()
     {
-        foreach ($images as $item) {
-            if (ImageController::isImageValid($item)) {
-                $path = $item->store('public/images');
-                $previewPath = ImageController::getPreview($path, self::TASK_PREVIEW_SIZE);
-                $imageName = basename($path);
-
-                if ($path) {
-                    $arPathes[$imageName] = [
-                        'picture' => $imageName,
-                        'preview' => $previewPath
-                    ];
-                }
-            }
+        $Tags = Tags::all();
+        foreach ($Tags as $tag) {
+            $arData[] = $tag->title;
         }
 
-        return $arPathes;
+        return $arData;
     }
 }
