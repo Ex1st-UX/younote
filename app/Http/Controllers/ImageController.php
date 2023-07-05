@@ -43,7 +43,7 @@ class ImageController extends Controller
     public static function resize(string $path, array $sizes): string
     {
         $storagePath = storage_path('app/');
-        $image = Image::make($storagePath . $path);
+        $image = \Image::make($storagePath . $path);
 
         $dirPath = $storagePath . self::PREVIEW_DIR_PATH;
         $extension = '.' . $image->extension;
@@ -61,7 +61,7 @@ class ImageController extends Controller
         foreach ($images as $item) {
             if (ImageController::isImageValid($item)) {
                 $path = $item->store('public/images');
-                $previewPath = ImageController::getPreview($path, self::TASK_PREVIEW_SIZE);
+                $previewPath = self::getPreview($path, self::TASK_PREVIEW_SIZE);
                 $imageName = basename($path);
 
                 if ($path) {
